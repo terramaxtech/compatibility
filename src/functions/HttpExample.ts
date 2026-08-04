@@ -5,7 +5,7 @@ export async function HttpExample(request: HttpRequest, context: InvocationConte
 
     const name = request.query.get('name') || await request.text() || 'world';
 
-    return { body: `Hello, ${name}!` };
+    return { body: `Hello, ${name}!  I have been updated.` };
 };
 
 app.http('HttpExample', {

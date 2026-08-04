@@ -3,8 +3,10 @@ import * as dotenv from "dotenv";
 import { fetchExperiments } from "../functions/fetchData/fetchExperiments";
 
 export async function getAllExperimentData(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+    const result = dotenv.config();
     try {
-        dotenv.config();
+        
+        context.log(result, process.env.AZURE_FUNCTIONS_ENVIRONMENT);
 
         const allExperiments = await fetchExperiments(context);
 
@@ -18,7 +20,7 @@ export async function getAllExperimentData(request: HttpRequest, context: Invoca
 
     } catch (err) {
         const errorBody = err instanceof Error ? err.message : "unknown error";
-        context.log("Error:", errorBody);
+        context.log("Error:", errorBody, "config result:", result);
         return {
             status: 400,
             body: JSON.stringify({
