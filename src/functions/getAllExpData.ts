@@ -19,8 +19,8 @@ export async function getAllExperimentData(request: HttpRequest, context: Invoca
         }
 
     } catch (err) {
-        const errorBody = err instanceof Error ? err.message : "unknown error";
-        context.log("Error:", errorBody, "config result:", result);
+        const errorBody = err instanceof Error ? `err.message, config result:${result}` : `unknown error, config result:${result}`;
+        context.log("Error:", errorBody);
         return {
             status: 400,
             body: JSON.stringify({
