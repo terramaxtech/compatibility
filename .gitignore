@@ -27,6 +27,12 @@ local.settings.json
 node_modules
 dist
 
+local.settings.json
+.vscode/
+*.log
+.env
+.env.*
+
 # Local python packages
 .python_packages/
 
