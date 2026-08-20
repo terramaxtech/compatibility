@@ -11,13 +11,15 @@ import { ComposedUnitExternal, UnitExternal, UnitExternalComponent, UnitExternal
 import { fetchUnitExternals } from "../fetchData/fetchUnitExternals";
 import { fetchUnitExternalsManufacturers } from "../fetchData/fetchUnitExternalsManufacturers";
 import { fetchUnitExternalsComponents } from "../fetchData/fetchUnitExternalsComponents";
+import { fetchMicrobeCfus } from "../fetchData/fetchMicrobeCfus";
+import { UnitMicrobeCfus } from "../dataModels/unitMicrobeCfus";
 
 
 export async function composeExperiments(context: InvocationContext) {
     try {
-        const [experiments, authors, expUnits, unitClients, unitInternals, unitExternals, unitExternalsManufacturers, unitExternalsComponents] = 
+        const [experiments, authors, expUnits, unitClients, unitInternals, unitExternals, unitExternalsManufacturers, unitExternalsComponents, unitMicrobeCfus] = 
             await Promise.all([fetchExperiments(context), fetchExpAuthors(context), fetchExpUnits(context), fetchUnitClients(context), fetchUnitInternals(context),
-                fetchUnitExternals(context), fetchUnitExternalsManufacturers(context), fetchUnitExternalsComponents(context)
+                fetchUnitExternals(context), fetchUnitExternalsManufacturers(context), fetchUnitExternalsComponents(context), fetchMicrobeCfus(context)
             ]);
 
         //const experiments: Experiment[] = await fetchExperiments(context);
@@ -45,33 +47,16 @@ export async function composeExperiments(context: InvocationContext) {
                     const thisUnit: composedUnit = {
                         unit: unit,
                         clients: unitClients.filter(c => c.unit_num === unit.unit_num).map(c => c.client_name),
-                        internals: unitInternals.filter(i => i.unit_num === unit.unit_num).map(internal => {
-                            const unitInteral: UnitInternals = { 
-                                code: internal.code,
-                                internal_name: internal.internal_name,
-                                unit_num: internal.unit_num,
-                                applicaiton_rate: internal.applicaiton_rate
-                            }
-                            return unitInteral;
-                        }),
+                        internals: unitInternals.filter(i => i.unit_num === unit.unit_num),
                         externals: unitExternals.filter(e => e.unit_num === unit.unit_num).map(external => {
                             const composedExternal: ComposedUnitExternal = {
                                 unit_external: external,
                                 manufacturers: unitExternalsManufacturers.filter(m => m.unit_external_code === external.code).map(m => m.manufacturer_name),
-                                components: unitExternalsComponents.filter(c => c.unit_external_code === external.code).map(component => {
-                                    const unitExternalsComponent: UnitExternalComponent = {
-                                        id: component.id,
-                                        component_name: component.component_name,
-                                        unit_external_code: component.unit_external_code,
-                                        min_percent: component.min_percent,
-                                        max_percent: component.max_percent,
-                                        other_qty: component.other_qty
-                                    }
-                                    return unitExternalsComponent;
-                                })
+                                components: unitExternalsComponents.filter(c => c.unit_external_code === external.code)
                             }
                             return composedExternal;
-                        })
+                        }),
+                        cfus: unitMicrobeCfus.filter(c => c.unit_num === unit.unit_num)
                     }
                     return thisUnit;
                 })

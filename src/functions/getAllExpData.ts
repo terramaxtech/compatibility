@@ -59,7 +59,7 @@ export async function getAllExperimentData(request: HttpRequest, context: Invoca
                 internals: allInternals,
                 manufacturers: allManufactureres,
                 microbeFamilies: allMicrobeFamilies,
-                simpleExternalFamilies: allSimpleExternalTypes,
+                simpleExternalTypes: allSimpleExternalTypes,
                 experiments: allExperiments
             }),
             headers: {

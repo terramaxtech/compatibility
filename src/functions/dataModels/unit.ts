@@ -1,5 +1,6 @@
 import { ComposedUnitExternal } from "./externals"
 import { SimpleListItem } from "./listItems"
+import { UnitMicrobeCfus } from "./unitMicrobeCfus"
 
 export type ExpUnit = {
     id: number,
@@ -24,5 +25,6 @@ export type composedUnit = {
     unit: ExpUnit,
     clients: string[],
     internals: UnitInternals[],
-    externals: ComposedUnitExternal[]
+    externals: ComposedUnitExternal[],
+    cfus: UnitMicrobeCfus[]
 }
