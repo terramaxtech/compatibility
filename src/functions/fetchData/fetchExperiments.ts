@@ -1,20 +1,21 @@
 import { InvocationContext, } from "@azure/functions";
 import { getSqlConfig } from "../resources/getSqlConfig";
 import * as sql from "mssql";
+import { Experiment } from "../dataModels/experiment";
 
-export async function fetchExperiments(context: InvocationContext): Promise<[]> {
+export async function fetchExperiments(context: InvocationContext): Promise<Experiment[]> {
     try {
         const sqlConfig = getSqlConfig(context);
 
         await sql.connect(sqlConfig);
-        const experimentsResult = await sql.query`SELECT * FROM experiments`;
-        const experimentsData = experimentsResult.recordset as [];
+        const result = await sql.query`SELECT num, start_date, notebook, notes 
+            FROM experiments`;
+        const data: Experiment[] = result.recordset as Experiment[];
 
-        return experimentsData;
+        return data;
 
     } catch (err) {
-        const errorBody: string = err instanceof Error ? err.message : "unknown error";
-        context.log(errorBody);
-        throw new Error(errorBody);       
+        context.log("fetchExperiments error:", err);
+        throw err;
     }
 }
